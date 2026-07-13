@@ -49,7 +49,7 @@
           }
         ],
         "fingerprint": "1783831949265",
-        "firingTriggerId": ["2147479573"],
+        "firingTriggerId": ["2147479572"],
         "tagFiringOption": "ONCE_PER_EVENT",
         "monitoringMetadata": {
           "type": "MAP"
@@ -57,6 +57,259 @@
         "consentSettings": {
           "consentStatus": "NOT_SET"
         }
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "tagId": "10",
+        "name": "GA4 - share",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "share"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "name", "value": "method" },
+                  { "type": "TEMPLATE", "key": "value", "value": "{{DLV - method}}" }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "name", "value": "content_type" },
+                  { "type": "TEMPLATE", "key": "value", "value": "{{DLV - content_type}}" }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-GYYH78K22F"
+          }
+        ],
+        "fingerprint": "1784000000010",
+        "firingTriggerId": ["20"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "tagId": "11",
+        "name": "GA4 - view_reading",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "view_reading"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "name", "value": "content_type" },
+                  { "type": "TEMPLATE", "key": "value", "value": "{{DLV - content_type}}" }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "name", "value": "personalized" },
+                  { "type": "TEMPLATE", "key": "value", "value": "{{DLV - personalized}}" }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "name", "value": "time_known" },
+                  { "type": "TEMPLATE", "key": "value", "value": "{{DLV - time_known}}" }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-GYYH78K22F"
+          }
+        ],
+        "fingerprint": "1784000000011",
+        "firingTriggerId": ["21"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "tagId": "12",
+        "name": "GA4 - generate_chart",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "generate_chart"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-GYYH78K22F"
+          }
+        ],
+        "fingerprint": "1784000000012",
+        "firingTriggerId": ["22"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "triggerId": "20",
+        "name": "CE - share",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              { "type": "TEMPLATE", "key": "arg0", "value": "{{_event}}" },
+              { "type": "TEMPLATE", "key": "arg1", "value": "share" }
+            ]
+          }
+        ],
+        "fingerprint": "1784000000020"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "triggerId": "21",
+        "name": "CE - view_reading",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              { "type": "TEMPLATE", "key": "arg0", "value": "{{_event}}" },
+              { "type": "TEMPLATE", "key": "arg1", "value": "view_reading" }
+            ]
+          }
+        ],
+        "fingerprint": "1784000000021"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "triggerId": "22",
+        "name": "CE - generate_chart",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              { "type": "TEMPLATE", "key": "arg0", "value": "{{_event}}" },
+              { "type": "TEMPLATE", "key": "arg1", "value": "generate_chart" }
+            ]
+          }
+        ],
+        "fingerprint": "1784000000022"
+      }
+    ],
+    "variable": [
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "variableId": "30",
+        "name": "DLV - method",
+        "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "method" }
+        ],
+        "fingerprint": "1784000000030"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "variableId": "31",
+        "name": "DLV - content_type",
+        "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "content_type" }
+        ],
+        "fingerprint": "1784000000031"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "variableId": "32",
+        "name": "DLV - personalized",
+        "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "personalized" }
+        ],
+        "fingerprint": "1784000000032"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "variableId": "33",
+        "name": "DLV - time_known",
+        "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "time_known" }
+        ],
+        "fingerprint": "1784000000033"
       }
     ],
     "builtInVariable": [
