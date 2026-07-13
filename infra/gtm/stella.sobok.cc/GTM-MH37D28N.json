@@ -1,0 +1,97 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2026-07-13 09:58:38",
+  "containerVersion": {
+    "path": "accounts/6365547564/containers/258047933/versions/2",
+    "accountId": "6365547564",
+    "containerId": "258047933",
+    "containerVersionId": "2",
+    "name": "GA",
+    "container": {
+      "path": "accounts/6365547564/containers/258047933",
+      "accountId": "6365547564",
+      "containerId": "258047933",
+      "name": "stella.sobok.cc",
+      "publicId": "GTM-MH37D28N",
+      "usageContext": ["WEB"],
+      "fingerprint": "1783936711535",
+      "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6365547564/containers/258047933/workspaces?apiLink=container",
+      "features": {
+        "supportUserPermissions": true,
+        "supportEnvironments": true,
+        "supportWorkspaces": true,
+        "supportGtagConfigs": false,
+        "supportBuiltInVariables": true,
+        "supportClients": false,
+        "supportFolders": true,
+        "supportTags": true,
+        "supportTemplates": true,
+        "supportTriggers": true,
+        "supportVariables": true,
+        "supportVersions": true,
+        "supportZones": true,
+        "supportTransformations": false
+      },
+      "tagIds": ["GTM-MH37D28N"]
+    },
+    "tag": [
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "tagId": "3",
+        "name": "Google 태그",
+        "type": "googtag",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "tagId",
+            "value": "G-GYYH78K22F"
+          }
+        ],
+        "fingerprint": "1783831949265",
+        "firingTriggerId": ["2147479573"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      }
+    ],
+    "builtInVariable": [
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "type": "PAGE_URL",
+        "name": "Page URL"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "type": "PAGE_HOSTNAME",
+        "name": "Page Hostname"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "type": "PAGE_PATH",
+        "name": "Page Path"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "type": "REFERRER",
+        "name": "Referrer"
+      },
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "type": "EVENT",
+        "name": "Event"
+      }
+    ],
+    "fingerprint": "1783831971873",
+    "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6365547564/containers/258047933/versions/2?apiLink=version"
+  }
+}
