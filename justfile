@@ -6,7 +6,8 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 github_owner := "sobok2026"
 github_repo := "sobok-ops"
 node_ip := "192.168.64.10"
-# UTM VM에 고정할 MAC 주소 (locally administered). VM 설정과 일치해야 한다
+vm_name := "sobok-1"
+# locally administered MAC 주소 — host/vm.env의 VM_MAC과 일치해야 한다
 vm_mac := "f2:50:b0:0c:00:01"
 age_key_file := env("SOPS_AGE_KEY_FILE", env("HOME") + "/Library/Application Support/sops/age/keys.txt")
 
@@ -63,7 +64,7 @@ talos-secret:
 talos-genconfig:
     talhelper genconfig
 
-# 부팅 ISO URL 출력 (스키마틱·arm64 반영). UTM VM에 이 ISO를 연결한다
+# 부팅 ISO URL 출력 (스키마틱·arm64 반영). Mac mini에서 just vm-fetch-iso에 넘긴다
 [working-directory: 'talos']
 talos-iso-url:
     talhelper genurl image
@@ -76,7 +77,55 @@ vm-ip:
     # bootpd는 lease 기록 시 옥텟 앞자리 0을 생략한다 → 두 표기 모두 검색
     stripped=$(echo "$mac" | awk -F: '{ for (i = 1; i <= NF; i++) { sub(/^0/, "", $i); printf "%s%s", $i, (i < NF ? ":" : "") } }')
     grep -B2 -A3 -i -e "$mac" -e "$stripped" /var/db/dhcpd_leases 2>/dev/null \
-      || echo "MAC $mac lease 없음 — VM 부팅을 확인하거나 시리얼 콘솔(screen /dev/ttysNNN)로 확인하세요"
+      || echo "MAC $mac lease 없음 — VM 부팅을 확인하거나 시리얼 로그(/opt/sobok/vm/log/serial.log)로 확인하세요"
+
+# ── 아래 host-*·vm-* 레시피는 Mac mini(호스트)에서 실행한다 ──
+
+# 무인 서버 초기 설정: 잠자기 금지·정전 자동 재시작·자동 업데이트 차단 (최초 1회)
+host-prep:
+    sudo bash host/host-prep.sh
+
+# VM 데몬 설치·갱신: /opt/sobok/vm 구성 + LaunchDaemon 등록 (실행 시 VM 재시작)
+host-install:
+    sudo bash host/install.sh
+
+# FileVault 잠금해제를 1회 생략하는 호스트 재시작 — VM을 먼저 정상 종료한다
+host-restart:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    sudo launchctl bootout system/org.sobok.vm 2>/dev/null || true
+    until ! pgrep -qf 'qemu-system-aarch64 -name {{ vm_name }}'; do sleep 1; done
+    sudo fdesetup authrestart
+
+# 부팅 ISO 배치 (url = 관리 머신에서 just talos-iso-url로 출력한 값)
+vm-fetch-iso url:
+    sudo curl -fSLo /opt/sobok/vm/boot.iso "{{ url }}"
+
+# VM 시작 (부팅 시엔 자동 시작되므로 vm-stop 후 재개용)
+vm-start:
+    sudo launchctl bootstrap system /Library/LaunchDaemons/org.sobok.vm.plist
+
+# VM 정지 (ACPI 정상 종료 후 다음 호스트 부팅 전까지 유지)
+vm-stop:
+    sudo launchctl bootout system/org.sobok.vm
+
+# VM 정상 종료 후 재시작
+vm-restart:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    sudo launchctl bootout system/org.sobok.vm 2>/dev/null || true
+    until ! pgrep -qf 'qemu-system-aarch64 -name {{ vm_name }}'; do sleep 1; done
+    sudo launchctl bootstrap system /Library/LaunchDaemons/org.sobok.vm.plist
+
+# VM 데몬·프로세스 상태
+vm-status:
+    #!/usr/bin/env bash
+    sudo launchctl print system/org.sobok.vm 2>/dev/null | grep -E '(state|pid) = ' || echo "org.sobok.vm 미등록"
+    pgrep -fl 'qemu-system-aarch64 -name {{ vm_name }}' >/dev/null && echo "QEMU 실행 중" || echo "QEMU 프로세스 없음"
+
+# 비상 시리얼 콘솔 접속 (종료: Ctrl+])
+vm-console:
+    sudo socat -,raw,echo=0,escape=0x1d unix-connect:/opt/sobok/vm/console.sock
 
 # 첫 설치: maintenance mode 노드에 무인증 적용 (ip = vm-ip로 확인한 DHCP IP)
 [working-directory: 'talos']

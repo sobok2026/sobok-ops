@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!-- sobok-1 VM 데몬 — 부팅(FileVault 잠금해제) 직후 로그인과 무관하게 시작된다
+     KeepAlive true: 크래시·게스트 재부팅(-no-reboot로 QEMU 종료) 모두 재기동한다.
+     VM을 의도적으로 멈추려면 launchctl bootout (just vm-stop) -->
+<dict>
+	<key>Label</key>
+	<string>org.sobok.vm</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/sobok/vm/bin/run-vm.sh</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>KeepAlive</key>
+	<true/>
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+	<key>ExitTimeOut</key>
+	<integer>120</integer>
+	<key>StandardOutPath</key>
+	<string>/opt/sobok/vm/log/qemu.log</string>
+	<key>StandardErrorPath</key>
+	<string>/opt/sobok/vm/log/qemu.log</string>
+</dict>
+</plist>

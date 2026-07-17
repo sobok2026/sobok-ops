@@ -1,6 +1,6 @@
 # talhelper 입력 — 단일 노드 Talos 클러스터 선언
 # 시크릿은 talsecret.sops.yaml(just talos-secret)과 talenv.sops.yaml(TAILSCALE_AUTHKEY)에서 온다
-# UTM Shared Network(192.168.64.0/24, 게이트웨이 192.168.64.1) 기준 정적 IP
+# QEMU vmnet-shared(192.168.64.0/24, 게이트웨이 192.168.64.1 — host/vm.env에서 고정) 기준 정적 IP
 ---
 clusterName: sobok-prod
 endpoint: https://192.168.64.10:6443
@@ -19,7 +19,7 @@ nodes:
   - hostname: sobok-1
     controlPlane: true
     ipAddress: 192.168.64.10
-    # UTM vz 기본 드라이브는 VirtIO block = /dev/vda
+    # QEMU virtio-blk = /dev/vda
     # maintenance mode에서 `talosctl -n <ip> get disks --insecure`로 실측 확인 후 확정한다
     installDisk: /dev/vda
     # genurl image가 참조한다 — 없으면 amd64 ISO URL이 나와 vz VM이 부팅 불가
@@ -32,9 +32,11 @@ nodes:
       # - sobok-1.<tailnet>.ts.net
     schematic:
       customization:
-        # vz 시리얼(PTTY)로 Talos 대시보드를 보려면 hvc0 콘솔이 필요하다
         extraKernelArgs:
-          - console=hvc0
+          # QEMU virt 머신의 PL011 시리얼 — 공식 QEMU 프로비저너와 동일한 콘솔 설정
+          - console=ttyAMA0,115200n8
+          # 대시보드 TUI가 시리얼 로그 파일(serial.log)을 계속 다시 그리는 것을 막는다
+          - talos.dashboard.disabled=1
         systemExtensions:
           officialExtensions:
             - siderolabs/tailscale

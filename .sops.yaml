@@ -1,7 +1,7 @@
 # SOPS 암호화 규칙 — public repo이므로 *.sops.yaml만 커밋 가능하다
 # <AGE_PUBLIC_KEY> 자리는 `just age-keygen` 출력의 공개키(age1...)로 교체한다
 creation_rules:
-  # talos 머신 시크릿·환경 파일: 값 전체 암호화 (구조 자체도 비밀)
+  # talos 머신 시크릿·환경 파일: 값 전체 암호화 (encrypted_regex 없음 — 키 이름은 SOPS 특성상 평문 유지)
   - path_regex: talos/.*\.sops\.ya?ml$
     mac_only_encrypted: true
     age: "age1wyv5yejnje4aac9vcvqzwqz4dhmx4ylw29xz2j5jycmmz94vws9qz0t562"

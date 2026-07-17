@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!-- 호스트 워치독 — 5분마다 VM·API·디스크·메모리를 점검하고 이상 시 Discord 알림
+     RunAtLoad 없음: 부팅 직후 VM이 뜨는 동안의 오탐을 피한다 (첫 실행은 +5분) -->
+<dict>
+	<key>Label</key>
+	<string>org.sobok.vm-watchdog</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/sobok/vm/bin/watchdog.sh</string>
+	</array>
+	<key>StartInterval</key>
+	<integer>300</integer>
+	<key>StandardOutPath</key>
+	<string>/opt/sobok/vm/log/watchdog.log</string>
+	<key>StandardErrorPath</key>
+	<string>/opt/sobok/vm/log/watchdog.log</string>
+</dict>
+</plist>

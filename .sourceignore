@@ -1,0 +1,12 @@
+# source-controller 아티팩트에서 제외 — Flux가 소비하지 않는 트리
+# (Kustomization path는 kubernetes/ 하위만 바라보지만 아티팩트를 가볍게 유지한다)
+/talos/
+/infra/
+/bootstrap/
+/.github/
+/script/
+/*.md
+/justfile
+/.mise.toml
+/.sops.yaml
+/LICENSE
