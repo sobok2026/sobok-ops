@@ -10,7 +10,9 @@
 ## 레포 역할
 
 - 이 repo는 sobok 프로덕션의 desired state를 관리한다. 앱 소스 코드는 sibling repo `../sobok`에 있다.
-- 상태 저장 데이터(Postgres/Valkey/Kafka)는 전부 Aiven 매니지드다. 박스에는 stateless 앱만 돈다.
+- 프로덕션 = Mac Mini의 UTM(vz) VM 위 Talos Linux 단일 노드 k8s + Flux GitOps. 자세한 구조와 런북은 README.md를 본다.
+- 상태 저장 데이터(Postgres/Valkey/Kafka/CockroachDB)는 전부 매니지드다. 클러스터에는 stateless 앱만 돈다.
+- `talos/clusterconfig/`는 평문 비밀 생성물이라 어떤 경우에도 커밋하지 않는다.
 
 ## 레포 규칙
 

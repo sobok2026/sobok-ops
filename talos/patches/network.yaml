@@ -1,0 +1,21 @@
+# vz 게스트 네트워크 — 인터페이스 이름이 예측 불가하므로 드라이버 셀렉터로 잡는다
+# 정적 IP라 macOS DHCP lease 변동과 무관하게 endpoint가 고정된다
+machine:
+  network:
+    interfaces:
+      - deviceSelector:
+          driver: virtio_net
+        dhcp: false
+        addresses:
+          - 192.168.64.10/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 192.168.64.1
+    nameservers:
+      - 1.1.1.1
+      - 8.8.8.8
+  kubelet:
+    nodeIP:
+      # tailscale IP(100.64.0.0/10)가 노드 IP로 잡히는 것을 막는다
+      validSubnets:
+        - 192.168.64.0/24

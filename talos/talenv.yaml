@@ -1,0 +1,5 @@
+# Talos/Kubernetes 버전 핀 — 업그레이드는 이 파일의 diff로 시작한다
+# kubernetesVersion은 해당 talosVersion이 지원하는 범위 안에서 올린다
+# 이 파일은 평문으로 커밋된다 — 비밀 값은 반드시 talenv.sops.yaml에만 넣는다
+talosVersion: v1.13.6
+kubernetesVersion: v1.36.2

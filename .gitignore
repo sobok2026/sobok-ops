@@ -427,3 +427,14 @@ terraform.rc
 # End of https://www.toptal.com/developers/gitignore/api/git,macos,nextjs,node,python,terraform
 
 *.env
+
+### Talos ###
+# talhelper genconfig 산출물 — 평문 머신 시크릿 포함, 절대 커밋 금지
+talos/clusterconfig/
+kubeconfig
+talosconfig
+# 평문으로 잠깐이라도 존재할 수 있는 이름들 이중 방어
+talos/talsecret.yaml
+talos/talsecret.yml
+*.agekey
+keys.txt
