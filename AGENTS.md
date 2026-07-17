@@ -10,11 +10,6 @@
 ## 레포 역할
 
 - 이 repo는 sobok 프로덕션의 desired state를 관리한다. 앱 소스 코드는 sibling repo `../sobok`에 있다.
-- 프로덕션은 단일 Mac Mini(macOS + OrbStack) 위 Docker Compose로 서비스한다. Kubernetes/OKE/ArgoCD는 없다.
-- `compose/` — 프로덕션 스택(traefik, cloudflared, 앱 5종). 이미지 digest 핀은 `sobok` CI가 PR로 승격한다.
-- `secrets/` — SOPS + age 암호화 시크릿(암호문만 커밋). age 개인키는 Mac Mini에만 존재한다.
-- `deploy/` — 박스 부트스트랩 + reconcile 스크립트. self-hosted GitHub Actions runner가 main push마다 실행한다.
-- `infra/` — Cloudflare(Tunnel/DNS/WAF 등), Aiven(Postgres/Valkey/Kafka), Grafana Cloud Terraform.
 - 상태 저장 데이터(Postgres/Valkey/Kafka)는 전부 Aiven 매니지드다. 박스에는 stateless 앱만 돈다.
 
 ## 레포 규칙
