@@ -47,8 +47,11 @@ args=(
 )
 
 # 설치 전(디스크 LBA1에 GPT 시그니처 없음)에만 부팅 ISO를 붙인다
+# 이때 UEFI 변수도 초기화한다 — ISO 없는 선행 부팅이 남긴 BootOrder는 CD 항목이 없고
+# EFI Shell에서 멈추므로 펌웨어가 CD를 재열거하도록 백지에서 시작해야 한다
 if [[ -f "$VM_DIR/boot.iso" ]] \
   && ! dd if="$VM_DIR/disk.raw" bs=512 skip=1 count=1 2>/dev/null | LC_ALL=C grep -aq 'EFI PART'; then
+  cp "$FIRMWARE_DIR/edk2-arm-vars.fd" "$VM_DIR/efi-vars.fd"
   args+=(-drive "id=cdrom1,file=$VM_DIR/boot.iso,media=cdrom")
 fi
 
