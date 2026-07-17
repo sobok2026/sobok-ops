@@ -427,6 +427,8 @@ terraform.rc
 # End of https://www.toptal.com/developers/gitignore/api/git,macos,nextjs,node,python,terraform
 
 *.env
+# host/vm.env는 비밀 없는 VM 선언이라 커밋 대상 (위 *.env 방어 패턴의 예외)
+!host/vm.env
 
 ### Talos ###
 # talhelper genconfig 산출물 — 평문 머신 시크릿 포함, 절대 커밋 금지
