@@ -1,0 +1,12 @@
+# Discord native 타입 — 웹훅 URL은 Secret의 address 키에서 읽는다 (컨트롤러가 /slack 접미사 자동 처리)
+# 채널은 웹훅 자체에 바인딩되므로 별도 설정 없음
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Provider
+metadata:
+  name: discord
+spec:
+  type: discord
+  username: sobok-flux
+  secretRef:
+    name: discord-webhook

@@ -1,0 +1,23 @@
+# GHCR pull 자격증명 — 전 워크로드 imagePullSecrets + 전 ImageRepository secretRef의 공용 원본
+# (이미지는 private — 이 시크릿 없이는 kubelet pull과 태그 스캔이 동시에 실패한다)
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: ghcr-pull
+  namespace: flux-system
+spec:
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  path: ./kubernetes/apps/sobok/ghcr-pull/app
+  targetNamespace: sobok
+  prune: true
+  wait: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  sourceRef:
+    kind: GitRepository
+    name: flux-system

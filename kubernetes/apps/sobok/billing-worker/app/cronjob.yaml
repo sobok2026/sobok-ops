@@ -1,0 +1,54 @@
+# 갱신 결제 one-shot (성공 exit 0 / 실패 exit 1). 재시도 1회 — 결제 멱등성은
+# 다음 실행의 reconcile 패스가 커버하므로 공격적으로 재시도하지 않는다
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: billing-worker
+spec:
+  # 매일 03:10 KST (compose 시대 launchd 스케줄 승계)
+  schedule: "10 3 * * *"
+  timeZone: Asia/Seoul
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 3600
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: billing-worker
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          imagePullSecrets:
+            - name: ghcr-pull
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: billing-worker
+              image: ghcr.io/sobok2026/sobok-billing-worker:main # {"$imagepolicy": "sobok:billing-worker"}
+              envFrom:
+                - configMapRef:
+                    name: billing-worker-config
+                - secretRef:
+                    name: billing-worker-secrets
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  memory: 1Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true

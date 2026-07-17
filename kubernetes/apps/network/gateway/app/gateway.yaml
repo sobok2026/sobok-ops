@@ -1,0 +1,23 @@
+# 단일 HTTP 리스너 — TLS는 Cloudflare 엣지에서 종단하므로 클러스터 안은 HTTP뿐
+# 트래픽은 apex(sobok.cc) 단일 호스트로 들어오고(터널 ingress가 apex만 통과)
+# 라우팅은 각 앱 HTTPRoute의 경로 매칭(/api, /ws, /*)이 가른다
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: sobok
+spec:
+  gatewayClassName: envoy
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: envoy-proxy-config
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          # HTTPRoute는 sobok 네임스페이스에 산다
+          from: All

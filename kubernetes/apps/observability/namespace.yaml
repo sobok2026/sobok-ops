@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability
+  labels:
+    # alloy-logs가 /var/log hostPath를 마운트한다 — Talos 기본 PSA(baseline)가 hostPath를
+    # 금지하므로 이 네임스페이스만 privileged로 연다
+    pod-security.kubernetes.io/enforce: privileged

@@ -1,0 +1,30 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment.yaml
+  - service.yaml
+  - httproute.yaml
+  - imagepolicy.yaml
+  - secret.sops.yaml
+configMapGenerator:
+  - name: api-config
+    literals:
+      - NODE_ENV=production
+      - PORT=3002
+      - APP_ORIGIN=https://sobok.cc
+      - APP_NAME=sobok
+      - AUTH_TRUSTED_ORIGINS=https://sobok.cc
+      - BETTER_AUTH_URL=https://sobok.cc/api/auth
+      - PASSKEY_ORIGIN=https://sobok.cc
+      - PASSKEY_RP_ID=sobok.cc
+      - VAPID_PUBLIC_KEY=<VAPID_PUBLIC_KEY>
+      - KAFKA_BROKERS=<AIVEN_KAFKA_HOST>:<PORT>
+      - KAFKA_CLIENT_ID=sobok-api
+      - APP_POSTGRES_APPLICATION_NAME=sobok-api
+      - CHAT_POSTGRES_APPLICATION_NAME=sobok-api
+      # api는 코드에서 리소스 service.name을 설정하지 않는다 — env가 유일한 공급원
+      - OTEL_SERVICE_NAME=sobok-api
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=sobok,deployment.environment=production
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_ENDPOINT=<GRAFANA_CLOUD_OTLP_ENDPOINT>

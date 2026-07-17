@@ -1,0 +1,25 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment.yaml
+  - service.yaml
+  - httproute.yaml
+  - imagepolicy.yaml
+  - secret.sops.yaml
+# 해시 서픽스가 붙어 값 변경 시 Deployment가 자동 롤링된다
+configMapGenerator:
+  - name: web-config
+    literals:
+      - NODE_ENV=production
+      - PORT=3000
+      - APP_NAME=sobok
+      - APP_POSTGRES_APPLICATION_NAME=sobok-web
+      - AUTH_TRUSTED_ORIGINS=https://sobok.cc
+      - BETTER_AUTH_URL=https://sobok.cc/api/auth
+      - PASSKEY_ORIGIN=https://sobok.cc
+      - PASSKEY_RP_ID=sobok.cc
+      - OTEL_SERVICE_NAME=sobok-web
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=sobok,deployment.environment=production
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_ENDPOINT=<GRAFANA_CLOUD_OTLP_ENDPOINT> # 예: https://otlp-gateway-prod-ap-northeast-0.grafana.net/otlp

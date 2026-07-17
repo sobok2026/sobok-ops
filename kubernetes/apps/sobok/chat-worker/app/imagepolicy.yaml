@@ -1,0 +1,25 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: chat-worker
+spec:
+  image: ghcr.io/sobok2026/sobok-chat-worker
+  interval: 5m
+  secretRef:
+    name: ghcr-pull
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: chat-worker
+spec:
+  imageRepositoryRef:
+    name: chat-worker
+  filterTags:
+    pattern: '^main-(?P<ts>\d+)-'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+  digestReflectionPolicy: IfNotPresent

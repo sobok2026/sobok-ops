@@ -1,0 +1,34 @@
+# 클러스터 루트 Kustomization — kubernetes/apps/ 전체를 재귀 리컨실한다
+#
+# 이 디렉터리(kubernetes/flux/)는 flux bootstrap의 루트 sync 대상이다.
+# flux bootstrap이 만드는 flux-system/ 옆에 이 파일이 함께 적용된다.
+#
+# 동작: kubernetes/apps/에는 최상위 kustomization.yaml이 없으므로 kustomize-controller가
+# 자동 생성하고, kustomization.yaml을 가진 하위 디렉터리(= 네임스페이스 디렉터리)는
+# 그 자체가 kustomize 루트로 잡힌다. 네임스페이스 디렉터리 추가 = 파일 추가만으로 끝.
+#
+# 자식 Kustomization(각 앱의 ks.yaml) 계약 — 명시 선언 원칙:
+#   - metadata.namespace: flux-system (decryption secretRef가 같은 ns의 sops-age를 봐야 한다)
+#   - spec.targetNamespace: <앱 네임스페이스>
+#   - spec.path: ./kubernetes/apps/<네임스페이스>/<앱>/app
+#   - spec.sourceRef: GitRepository flux-system
+#   - spec.prune: true / spec.wait: true / spec.interval: 30m / spec.retryInterval: 1m
+#   - SOPS 시크릿이 있으면 spec.decryption: {provider: sops, secretRef: {name: sops-age}}
+#   - 순서가 필요하면 spec.dependsOn (예: HTTPRoute를 가진 앱 → gateway)
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps
+  namespace: flux-system
+spec:
+  interval: 10m
+  retryInterval: 1m
+  path: ./kubernetes/apps
+  prune: true
+  # 자식 Kustomization 생성까지만 책임진다 — 앱 Ready는 각 자식이 wait: true로 감시해
+  # 알림이 앱 단위로 떨어지게 한다 (루트가 wait하면 한 앱 장애가 전체 Not Ready로 뭉개진다)
+  wait: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system

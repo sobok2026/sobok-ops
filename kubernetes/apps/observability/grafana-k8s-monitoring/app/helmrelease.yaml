@@ -1,0 +1,74 @@
+# v4 차트 — destinations는 map(v3의 배열 아님). 자격증명은 values를 통과하지 않고
+# 기존 Secret(grafana-cloud-credentials)을 Alloy가 직접 읽는다 → 로테이션 시 helm upgrade 불필요
+# TODO: url 두 곳을 Grafana Cloud 콘솔(스택 상세)의 실제 엔드포인트로 교체할 것
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana-k8s-monitoring
+spec:
+  interval: 30m
+  timeout: 10m
+  chartRef:
+    kind: OCIRepository
+    name: grafana-k8s-monitoring
+  driftDetection:
+    mode: enabled
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    cluster:
+      name: sobok-prod
+
+    destinations:
+      grafana-cloud-metrics:
+        type: prometheus
+        url: "<GRAFANA_CLOUD_PROMETHEUS_PUSH_URL>" # 예: https://prometheus-prod-xx-prod-ap-northeast-0.grafana.net/api/prom/push
+        auth:
+          type: basic
+          usernameKey: prometheus-username
+          passwordKey: access-token
+        secret:
+          create: false
+          name: grafana-cloud-credentials
+          namespace: observability
+      grafana-cloud-logs:
+        type: loki
+        url: "<GRAFANA_CLOUD_LOKI_PUSH_URL>" # 예: https://logs-prod-xxx.grafana.net/loki/api/v1/push
+        auth:
+          type: basic
+          usernameKey: loki-username
+          passwordKey: access-token
+        secret:
+          create: false
+          name: grafana-cloud-credentials
+          namespace: observability
+
+    # kube_job_status_failed 등 CronJob 메트릭은 KSM 기본 allowlist에 포함 —
+    # billing-worker 실패·dead-man 알림(Grafana Cloud)의 근거 데이터
+    clusterMetrics:
+      enabled: true
+      collector: alloy-metrics
+    clusterEvents:
+      enabled: true
+      collector: alloy-singleton
+    podLogsViaLoki:
+      enabled: true
+      collector: alloy-logs
+
+    # v4는 KSM 배포가 기본 꺼짐 — 명시적으로 켠다
+    telemetryServices:
+      kube-state-metrics:
+        deploy: true
+
+    collectors:
+      alloy-metrics:
+        presets: [small, statefulset]
+      alloy-singleton:
+        presets: [small, singleton]
+      alloy-logs:
+        presets: [small, filesystem-log-reader, daemonset]

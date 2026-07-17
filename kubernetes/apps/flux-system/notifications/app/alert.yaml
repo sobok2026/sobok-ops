@@ -1,0 +1,59 @@
+# eventSeverity: info = 에러 포함 전체 이벤트. 단 성공 reconcile마다 나오는
+# "Reconciliation finished" 하트비트는 interval마다 반복돼 Discord를 도배하므로 제외한다
+# → 남는 것: 적용 변경분, helm install/upgrade/rollback, 이미지 승격 커밋, 에러 전부
+#
+# 주의: eventSources의 namespace를 생략하면 Alert의 ns(flux-system)로 고정 매칭된다
+# (namespace 와일드카드 미지원) — 앱 리소스는 targetNamespace로 각 앱 ns에 살기 때문에
+# kind별로 실제 ns를 열거해야 한다. 새 네임스페이스를 추가하면 여기도 추가할 것.
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: discord
+spec:
+  providerRef:
+    name: discord
+  eventSeverity: info
+  exclusionList:
+    - "^Reconciliation finished.*"
+    - "^Dependencies do not meet ready condition.*"
+  eventSources:
+    # flux-system: 루트 소스와 모든 자식 Kustomization
+    - kind: GitRepository
+      name: "*"
+    - kind: Kustomization
+      name: "*"
+    # kube-system: metrics-server(HelmRepository) + reloader(OCIRepository)
+    - kind: HelmRepository
+      name: "*"
+      namespace: kube-system
+    - kind: OCIRepository
+      name: "*"
+      namespace: kube-system
+    - kind: HelmRelease
+      name: "*"
+      namespace: kube-system
+    # network: envoy-gateway
+    - kind: OCIRepository
+      name: "*"
+      namespace: network
+    - kind: HelmRelease
+      name: "*"
+      namespace: network
+    # observability: grafana-k8s-monitoring
+    - kind: OCIRepository
+      name: "*"
+      namespace: observability
+    - kind: HelmRelease
+      name: "*"
+      namespace: observability
+    # sobok: 4단계 워크로드의 이미지 오토메이션 (승격 커밋·스캔 실패 알림)
+    - kind: ImageRepository
+      name: "*"
+      namespace: sobok
+    - kind: ImagePolicy
+      name: "*"
+      namespace: sobok
+    - kind: ImageUpdateAutomation
+      name: "*"
+      namespace: sobok

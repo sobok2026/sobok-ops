@@ -1,0 +1,69 @@
+# remotely-managed 터널 — ingress 규칙은 infra/cloudflare/account/sobok/selfhost-tunnel(terraform)이 소유,
+# 여기는 커넥터만. replicas 2 = 같은 터널의 HA 커넥터 (공식 패턴, 오토스케일 금지)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  annotations:
+    # 토큰(tunnel-token Secret) 로테이션 시 자동 롤링
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cloudflared
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cloudflared
+    spec:
+      containers:
+        - name: cloudflared
+          # 서드파티 이미지 — image automation 비대상, 수동 핀
+          image: docker.io/cloudflare/cloudflared:2026.7.2
+          command:
+            - cloudflared
+            - tunnel
+            - --no-autoupdate
+            - --loglevel
+            - info
+            - --metrics
+            - 0.0.0.0:2000
+            - run
+          env:
+            - name: TUNNEL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: tunnel-token
+                  key: token
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault

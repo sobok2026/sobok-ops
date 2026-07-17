@@ -1,0 +1,80 @@
+# 드레이닝 설계: SIGTERM 시 앱이 /health를 503으로 내리고 클라이언트에 reconnect를 방송한다
+# → readiness는 /health(드레인 감지), liveness는 의도적으로 TCP만 — httpGet이면 드레이닝 중인
+#   정상 파드를 재시작시킨다
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: chat
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: chat
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+        - name: ghcr-pull
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: chat
+          image: ghcr.io/sobok2026/sobok-chat:main # {"$imagepolicy": "sobok:chat"}
+          ports:
+            - name: http
+              containerPort: 3003
+          envFrom:
+            - configMapRef:
+                name: chat-config
+            - secretRef:
+                name: chat-secrets
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 12
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true

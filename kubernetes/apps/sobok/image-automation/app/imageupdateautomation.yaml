@@ -1,0 +1,35 @@
+# flux bootstrap이 만든 flux-system GitRepository의 deploy key(--read-write-key)로 main에 직접 push
+# 스캔 범위는 마커가 존재하는 sobok 트리로 한정한다
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: sobok
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        name: sobok-flux
+        email: flux@sobok.cc
+      messageTemplate: |
+        chore: promote images
+
+        {{ range $file, $objects := .Changed.FileChanges -}}
+        {{ range $obj, $changes := $objects -}}
+        {{ range $_, $c := $changes -}}
+        {{ $c.OldValue }} -> {{ $c.NewValue }}
+        {{ end -}}{{ end -}}{{ end }}
+        [ci skip]
+    push:
+      branch: main
+  update:
+    path: ./kubernetes/apps/sobok
+    strategy: Setters

@@ -1,0 +1,9 @@
+# metrics-server는 OCI 미제공 — HTTP 저장소가 유일한 공식 소스
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: metrics-server
+spec:
+  interval: 1h
+  url: https://kubernetes-sigs.github.io/metrics-server/

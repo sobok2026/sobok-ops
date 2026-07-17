@@ -1,0 +1,18 @@
+# SOPS Secret 갱신 → 참조 워크로드 자동 롤링. external-secrets 없는 설계의 필수 보완재
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: reloader
+  namespace: flux-system
+spec:
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  path: ./kubernetes/apps/kube-system/reloader/app
+  targetNamespace: kube-system
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system

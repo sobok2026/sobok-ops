@@ -1,0 +1,24 @@
+# Gateway API CRD가 차트에 동봉된다(experimental 채널) — 기본 helm 동작은 upgrade 때
+# CRD를 갱신하지 않으므로 CreateReplace를 명시해 버전 업그레이드에 CRD가 따라오게 한다
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: envoy-gateway
+  driftDetection:
+    mode: enabled
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  # 컨트롤러 기본값이 이미 소형(replicas 1, requests 100m/256Mi) — values 불필요
+  # 데이터플레인(프록시) 리소스는 gateway/app/envoyproxy.yaml에서 제어한다

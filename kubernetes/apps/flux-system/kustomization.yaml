@@ -1,0 +1,6 @@
+# flux-system 네임스페이스는 flux bootstrap이 생성·소유한다 — namespace.yaml 없음
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - notifications/ks.yaml

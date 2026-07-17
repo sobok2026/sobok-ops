@@ -1,0 +1,27 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: reloader
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: reloader
+  driftDetection:
+    mode: enabled
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    reloader:
+      deployment:
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            memory: 128Mi

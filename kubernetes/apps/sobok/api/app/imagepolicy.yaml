@@ -1,0 +1,25 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: api
+spec:
+  image: ghcr.io/sobok2026/sobok-api
+  interval: 5m
+  secretRef:
+    name: ghcr-pull
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: api
+spec:
+  imageRepositoryRef:
+    name: api
+  filterTags:
+    pattern: '^main-(?P<ts>\d+)-'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+  digestReflectionPolicy: IfNotPresent

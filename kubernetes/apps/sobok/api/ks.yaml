@@ -1,0 +1,24 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: api
+  namespace: flux-system
+spec:
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  path: ./kubernetes/apps/sobok/api/app
+  targetNamespace: sobok
+  prune: true
+  wait: true
+  dependsOn:
+    - name: gateway
+    - name: ghcr-pull
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  sourceRef:
+    kind: GitRepository
+    name: flux-system

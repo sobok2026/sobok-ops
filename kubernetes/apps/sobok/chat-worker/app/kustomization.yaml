@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment.yaml
+  - imagepolicy.yaml
+  - secret.sops.yaml
+configMapGenerator:
+  - name: chat-worker-config
+    literals:
+      - NODE_ENV=production
+      - PORT=3004
+      - KAFKA_BROKERS=<AIVEN_KAFKA_HOST>:<PORT>
+      - KAFKA_CLIENT_ID=sobok-chat-worker
+      - APP_POSTGRES_POOL_MAX=1
+      - CHAT_POSTGRES_POOL_MAX=1
+      - APP_POSTGRES_APPLICATION_NAME=sobok-chat-worker
+      - CHAT_POSTGRES_APPLICATION_NAME=sobok-chat-worker

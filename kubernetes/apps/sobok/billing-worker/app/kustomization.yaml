@@ -1,0 +1,13 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cronjob.yaml
+  - imagepolicy.yaml
+  - secret.sops.yaml
+configMapGenerator:
+  - name: billing-worker-config
+    literals:
+      - NODE_ENV=production
+      - APP_POSTGRES_POOL_MAX=1
+      - APP_POSTGRES_APPLICATION_NAME=sobok-billing-worker

@@ -1,0 +1,25 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: chat
+spec:
+  image: ghcr.io/sobok2026/sobok-chat
+  interval: 5m
+  secretRef:
+    name: ghcr-pull
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: chat
+spec:
+  imageRepositoryRef:
+    name: chat
+  filterTags:
+    pattern: '^main-(?P<ts>\d+)-'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+  digestReflectionPolicy: IfNotPresent

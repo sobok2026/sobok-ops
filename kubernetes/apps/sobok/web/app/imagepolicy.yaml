@@ -1,0 +1,27 @@
+# 태그 스킴 main-<커밋 epoch 초>-<sha> — 커밋 기반이라 잡 간 동일·재실행 불변, epoch가 단조증가 축
+# IfNotPresent = 불변 태그 추적의 안전 기본값: 태그가 바뀔 때만 digest 반영 → 마커가 tag@digest 전체 치환
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: web
+spec:
+  image: ghcr.io/sobok2026/sobok-web
+  interval: 5m
+  secretRef:
+    name: ghcr-pull
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: web
+spec:
+  imageRepositoryRef:
+    name: web
+  filterTags:
+    pattern: '^main-(?P<ts>\d+)-'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+  digestReflectionPolicy: IfNotPresent

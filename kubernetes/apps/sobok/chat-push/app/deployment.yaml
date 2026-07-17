@@ -1,0 +1,76 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-push
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: chat-push
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: chat-push
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+        - name: ghcr-pull
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: chat-push
+          image: ghcr.io/sobok2026/sobok-chat-push:main # {"$imagepolicy": "sobok:chat-push"}
+          ports:
+            - name: http
+              containerPort: 3005
+          envFrom:
+            - configMapRef:
+                name: chat-push-config
+            - secretRef:
+                name: chat-push-secrets
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 12
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 192Mi
+            limits:
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true

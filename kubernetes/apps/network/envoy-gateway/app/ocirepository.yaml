@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: envoy-gateway
+spec:
+  interval: 1h
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  url: oci://docker.io/envoyproxy/gateway-helm
+  ref:
+    # 차트 태그는 v 접두사 포함
+    tag: v1.8.2

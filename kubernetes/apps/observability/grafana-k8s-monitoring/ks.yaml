@@ -1,0 +1,22 @@
+# Grafana k8s-monitoring(Alloy) → Grafana Cloud. 클러스터 메트릭·이벤트·파드 로그
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: grafana-k8s-monitoring
+  namespace: flux-system
+spec:
+  interval: 30m
+  retryInterval: 1m
+  timeout: 10m
+  path: ./kubernetes/apps/observability/grafana-k8s-monitoring/app
+  targetNamespace: observability
+  prune: true
+  wait: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  sourceRef:
+    kind: GitRepository
+    name: flux-system

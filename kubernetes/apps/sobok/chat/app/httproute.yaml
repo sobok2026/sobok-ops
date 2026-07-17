@@ -1,0 +1,20 @@
+# WebSocket — Envoy Gateway는 기본 업그레이드 설정이 websocket이라 별도 필터 불필요
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: chat
+spec:
+  parentRefs:
+    - name: sobok
+      namespace: network
+  hostnames:
+    - sobok.cc
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /ws
+      backendRefs:
+        - name: chat
+          port: 3003

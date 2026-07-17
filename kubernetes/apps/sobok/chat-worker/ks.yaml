@@ -1,0 +1,24 @@
+# Kafka 컨슈머 — 인그레스 없음, 외부 데이터 플레인만 바라보므로 gateway 의존 없음
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: chat-worker
+  namespace: flux-system
+spec:
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  path: ./kubernetes/apps/sobok/chat-worker/app
+  targetNamespace: sobok
+  prune: true
+  wait: true
+  dependsOn:
+    - name: ghcr-pull
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  sourceRef:
+    kind: GitRepository
+    name: flux-system

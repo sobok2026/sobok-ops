@@ -1,0 +1,23 @@
+# 프록시 인프라 커스터마이즈 — Gateway.spec.infrastructure.parametersRef가 참조한다
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: envoy-proxy-config
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        # 단일 노드 — 매니지드 이관 시 상향 (README 이관 체크리스트)
+        replicas: 1
+        container:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      envoyService:
+        # LB 구현체가 없는 Talos에서 기본값 LoadBalancer면 영구 Pending — ClusterIP 명시
+        type: ClusterIP
+        # 기본 이름은 해시 접미사가 붙어 예측 불가 — cloudflared origin이 가리킬 고정 이름
+        name: envoy-sobok
