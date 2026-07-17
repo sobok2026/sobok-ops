@@ -25,7 +25,7 @@ locals {
   ]) : toset([])
 
   # 코드의 producer/consumer 역할에서 도출한 최소 권한 부여:
-  #   sobok-api       -> chat.message 생산
+  #   sobok-api        -> chat.message 생산
   #   chat-worker      -> chat.message 소비, chat.push.fanout 생산
   #   chat-push        -> chat.push.fanout 소비 AND 재적재(keyset 페이지네이션) => readwrite
   service_acls = var.manage_service_users ? [
