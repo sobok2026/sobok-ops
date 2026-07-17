@@ -13,7 +13,7 @@ allowSchedulingOnControlPlanes: true
 # tailscale 조인 뒤 MagicDNS 이름을 추가하고 재적용하면 tailnet 경유 kubectl이 열린다
 additionalApiServerCertSans:
   - 192.168.64.10
-  # - sobok-1.<tailnet>.ts.net
+  - sobok-1.tailba4b41.ts.net
 
 nodes:
   - hostname: sobok-1
@@ -29,7 +29,7 @@ nodes:
     # tailscale 조인 뒤 MagicDNS 이름을 추가하고 재적용하면 tailnet 경유 talosctl이 열린다
     certSANs:
       - 192.168.64.10
-      # - sobok-1.<tailnet>.ts.net
+      - sobok-1.tailba4b41.ts.net
     schematic:
       customization:
         extraKernelArgs:
@@ -53,4 +53,4 @@ nodes:
           - TS_EXTRA_ARGS=--advertise-tags=tag:sobok
 
 patches:
-  - "@./patches/network.yaml"
+  - '@./patches/network.yaml'
