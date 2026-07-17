@@ -35,6 +35,11 @@ data "cloudflare_zone" "sobok_cc" {
   }
 }
 
+data "cloudflare_zero_trust_tunnel_cloudflared_token" "selfhost" {
+  account_id = data.cloudflare_zone.sobok_cc.account.id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.selfhost.id
+}
+
 locals {
   tunnel_name = "sobok-selfhost"
   # k8s network 네임스페이스의 Gateway 프록시 Service (kubernetes/apps/network/gateway/app/envoyproxy.yaml의 고정 이름)
@@ -67,10 +72,16 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "selfhost" {
   }
 }
 
-data "cloudflare_zero_trust_tunnel_cloudflared_token" "selfhost" {
-  account_id = data.cloudflare_zone.sobok_cc.account.id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.selfhost.id
-}
+# 컷오버 시점에 활성화 — 현재 apex는 workers(account/sobok/workers/apex)가 서빙 중이라
+# 전환 순서(터널 검증 → 레코드 교체 → 워커 라우트 정리)는 사람이 결정한다
+# resource "cloudflare_dns_record" "apex" {
+#   zone_id = data.cloudflare_zone.sobok_cc.id
+#   name    = "@"
+#   content = "${cloudflare_zero_trust_tunnel_cloudflared.selfhost.id}.cfargotunnel.com"
+#   type    = "CNAME"
+#   ttl     = 1
+#   proxied = true
+# }
 
 # k8s Secret(network/tunnel-token) 원본 — `terraform output -raw tunnel_token` 후 sops로 봉인
 output "tunnel_token" {
@@ -83,14 +94,3 @@ output "tunnel_cname" {
   description = "DNS 컷오버 대상 CNAME 값."
   value       = "${cloudflare_zero_trust_tunnel_cloudflared.selfhost.id}.cfargotunnel.com"
 }
-
-# 컷오버 시점에 활성화 — 현재 apex는 workers(account/sobok/workers/apex)가 서빙 중이라
-# 전환 순서(터널 검증 → 레코드 교체 → 워커 라우트 정리)는 사람이 결정한다
-# resource "cloudflare_dns_record" "apex" {
-#   zone_id = data.cloudflare_zone.sobok_cc.id
-#   name    = "@"
-#   content = "${cloudflare_zero_trust_tunnel_cloudflared.selfhost.id}.cfargotunnel.com"
-#   type    = "CNAME"
-#   ttl     = 1
-#   proxied = true
-# }
