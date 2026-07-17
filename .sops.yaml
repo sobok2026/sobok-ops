@@ -4,9 +4,9 @@ creation_rules:
   # talos 머신 시크릿·환경 파일: 값 전체 암호화 (구조 자체도 비밀)
   - path_regex: talos/.*\.sops\.ya?ml$
     mac_only_encrypted: true
-    age: "<AGE_PUBLIC_KEY>"
+    age: "age1wyv5yejnje4aac9vcvqzwqz4dhmx4ylw29xz2j5jycmmz94vws9qz0t562"
   # k8s Secret 매니페스트: data/stringData만 암호화해 diff 가독성 유지
   - path_regex: (bootstrap|kubernetes)/.*\.sops\.ya?ml$
     encrypted_regex: ^(data|stringData)$
     mac_only_encrypted: true
-    age: "<AGE_PUBLIC_KEY>"
+    age: "age1wyv5yejnje4aac9vcvqzwqz4dhmx4ylw29xz2j5jycmmz94vws9qz0t562"
