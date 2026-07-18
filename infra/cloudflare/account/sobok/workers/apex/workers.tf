@@ -12,7 +12,7 @@
 
 data "cloudflare_zone" "sobok_cc" {
   filter = {
-    name = "sobok.cc"
+    name = var.domain
   }
 }
 
@@ -28,6 +28,6 @@ resource "cloudflare_workers_script" "apex" {
 resource "cloudflare_workers_custom_domain" "apex" {
   account_id = data.cloudflare_zone.sobok_cc.account.id
   zone_id    = data.cloudflare_zone.sobok_cc.id
-  hostname   = "sobok.cc"
+  hostname   = var.domain
   service    = cloudflare_workers_script.apex.script_name
 }

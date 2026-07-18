@@ -1,34 +1,3 @@
-terraform {
-  required_version = ">= 1.14.0, < 2.0.0"
-
-  cloud {
-    organization = "sobok"
-
-    workspaces {
-      project = "cloudflare"
-      name    = "account-selfhost-tunnel"
-    }
-  }
-
-  required_providers {
-    cloudflare = {
-      source = "cloudflare/cloudflare"
-      # tunnel token data source는 5.8.2+ 필요
-      version = ">= 5.16.0, < 6.0.0"
-    }
-  }
-}
-
-provider "cloudflare" {}
-
-variable "domain" {
-  description = "Primary Cloudflare zone name."
-  type        = string
-  default     = "sobok.cc"
-  nullable    = false
-}
-
-# account_id/zone_id는 워크스페이스 변수 대신 zone에서 파생한다 (workers 모듈과 동일 패턴)
 data "cloudflare_zone" "sobok_cc" {
   filter = {
     name = var.domain
@@ -82,15 +51,3 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "selfhost" {
 #   ttl     = 1
 #   proxied = true
 # }
-
-# k8s Secret(network/tunnel-token) 원본 — `terraform output -raw tunnel_token` 후 sops로 봉인
-output "tunnel_token" {
-  description = "cloudflared 커넥터 토큰. kubernetes/apps/network/cloudflared/app/secret.sops.yaml에 봉인한다."
-  value       = data.cloudflare_zero_trust_tunnel_cloudflared_token.selfhost.token
-  sensitive   = true
-}
-
-output "tunnel_cname" {
-  description = "DNS 컷오버 대상 CNAME 값."
-  value       = "${cloudflare_zero_trust_tunnel_cloudflared.selfhost.id}.cfargotunnel.com"
-}

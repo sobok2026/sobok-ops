@@ -9,17 +9,15 @@
 # ORDER: the `stella` service must exist before this applies, so run the first CI deploy
 # (which creates the Worker) before `terraform apply` on this workspace.
 
-# Zone and account IDs are derived from the domain name, so this workspace needs no
-# Terraform variables — only the project-level CLOUDFLARE_API_TOKEN (with Zone Read).
 data "cloudflare_zone" "sobok_cc" {
   filter = {
-    name = "sobok.cc"
+    name = var.domain
   }
 }
 
 resource "cloudflare_workers_custom_domain" "stella" {
   account_id = data.cloudflare_zone.sobok_cc.account.id
   zone_id    = data.cloudflare_zone.sobok_cc.id
-  hostname   = "stella.sobok.cc"
+  hostname   = "stella.${var.domain}"
   service    = "stella"
 }

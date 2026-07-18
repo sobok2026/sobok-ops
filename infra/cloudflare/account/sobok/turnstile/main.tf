@@ -1,35 +1,3 @@
-terraform {
-  required_version = ">= 1.14.0, < 2.0.0"
-
-  cloud {
-    organization = "sobok"
-
-    workspaces {
-      project = "cloudflare"
-      name    = "account-turnstile"
-    }
-  }
-
-  required_providers {
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = ">= 5.16.0, < 6.0.0"
-    }
-  }
-}
-
-# 프로젝트 레벨 CLOUDFLARE_API_TOKEN 변수 세트로 인증한다.
-# 이 워크스페이스는 토큰에 Turnstile Read/Write 스코프가 추가로 필요하다.
-provider "cloudflare" {}
-
-variable "domain" {
-  description = "Primary Cloudflare zone name."
-  type        = string
-  default     = "sobok.cc"
-  nullable    = false
-}
-
-# account_id는 워크스페이스 변수 대신 zone에서 파생한다 (workers·selfhost-tunnel 모듈과 동일 패턴)
 data "cloudflare_zone" "sobok_cc" {
   filter = {
     name = var.domain
@@ -50,16 +18,4 @@ resource "cloudflare_turnstile_widget" "sobok" {
   domains = [var.domain]
   mode    = "managed"
   region  = "world"
-}
-
-output "turnstile_sitekey" {
-  description = "웹 클라이언트 사이트키(공개값). sobok 레포 apps/web/public.env의 NEXT_PUBLIC_TURNSTILE_SITE_KEY로 커밋한다."
-  value       = cloudflare_turnstile_widget.sobok.sitekey
-}
-
-# `terraform output -raw turnstile_secret_key`로 꺼내 sops로 봉인한다
-output "turnstile_secret_key" {
-  description = "siteverify 시크릿. kubernetes/apps/sobok/api/app/secret.sops.yaml의 TURNSTILE_SECRET_KEY에 봉인한다."
-  value       = cloudflare_turnstile_widget.sobok.secret
-  sensitive   = true
 }
