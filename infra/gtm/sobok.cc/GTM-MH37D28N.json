@@ -275,6 +275,13 @@
               {
                 "type": "MAP",
                 "map": [
+                  { "type": "TEMPLATE", "key": "key", "value": "sobok.cc" },
+                  { "type": "TEMPLATE", "key": "value", "value": "G-MSZX3B9E4B" }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
                   { "type": "TEMPLATE", "key": "key", "value": "stella.sobok.cc" },
                   { "type": "TEMPLATE", "key": "value", "value": "G-GYYH78K22F" }
                 ]
