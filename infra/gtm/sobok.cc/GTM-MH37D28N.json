@@ -11,7 +11,7 @@
       "path": "accounts/6365547564/containers/258047933",
       "accountId": "6365547564",
       "containerId": "258047933",
-      "name": "stella.sobok.cc",
+      "name": "sobok.cc",
       "publicId": "GTM-MH37D28N",
       "usageContext": ["WEB"],
       "fingerprint": "1783936711535",
@@ -45,7 +45,7 @@
           {
             "type": "TEMPLATE",
             "key": "tagId",
-            "value": "G-GYYH78K22F"
+            "value": "{{LT - GA4 Measurement ID}}"
           }
         ],
         "fingerprint": "1783831949265",
@@ -98,7 +98,7 @@
           {
             "type": "TEMPLATE",
             "key": "measurementIdOverride",
-            "value": "G-GYYH78K22F"
+            "value": "{{LT - GA4 Measurement ID}}"
           }
         ],
         "fingerprint": "1784000000010",
@@ -158,7 +158,7 @@
           {
             "type": "TEMPLATE",
             "key": "measurementIdOverride",
-            "value": "G-GYYH78K22F"
+            "value": "{{LT - GA4 Measurement ID}}"
           }
         ],
         "fingerprint": "1784000000011",
@@ -191,7 +191,7 @@
           {
             "type": "TEMPLATE",
             "key": "measurementIdOverride",
-            "value": "G-GYYH78K22F"
+            "value": "{{LT - GA4 Measurement ID}}"
           }
         ],
         "fingerprint": "1784000000012",
@@ -259,6 +259,46 @@
       }
     ],
     "variable": [
+      {
+        "accountId": "6365547564",
+        "containerId": "258047933",
+        "variableId": "34",
+        "name": "LT - GA4 Measurement ID",
+        "type": "smm",
+        "notes": "Page Hostname → 서비스별 GA4 property. 미등록 hostname은 default 없음(전송 안 함).",
+        "parameter": [
+          { "type": "TEMPLATE", "key": "input", "value": "{{Page Hostname}}" },
+          {
+            "type": "LIST",
+            "key": "map",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "key", "value": "stella.sobok.cc" },
+                  { "type": "TEMPLATE", "key": "value", "value": "G-GYYH78K22F" }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "key", "value": "zwds.sobok.cc" },
+                  { "type": "TEMPLATE", "key": "value", "value": "G-7WQG7FMF6T" }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "key", "value": "vibe.sobok.cc" },
+                  { "type": "TEMPLATE", "key": "value", "value": "G-RHHX4JRYDS" }
+                ]
+              }
+            ]
+          },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" }
+        ],
+        "fingerprint": "1784000000034"
+      },
       {
         "accountId": "6365547564",
         "containerId": "258047933",
