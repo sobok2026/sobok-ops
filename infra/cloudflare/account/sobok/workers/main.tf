@@ -11,3 +11,7 @@ module "stella" {
 module "zwds" {
   source = "./zwds"
 }
+
+module "vibe" {
+  source = "./vibe"
+}
