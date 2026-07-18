@@ -7,3 +7,7 @@ module "apex" {
 module "stella" {
   source = "./stella"
 }
+
+module "zwds" {
+  source = "./zwds"
+}
