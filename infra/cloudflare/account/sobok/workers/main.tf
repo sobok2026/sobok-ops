@@ -15,3 +15,7 @@ module "zwds" {
 module "vibe" {
   source = "./vibe"
 }
+
+module "horn" {
+  source = "./horn"
+}
