@@ -41,8 +41,8 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "selfhost" {
   }
 }
 
-# 컷오버 시점에 활성화 — 현재 apex는 workers(account/sobok/workers/apex)가 서빙 중이라
-# 전환 순서(터널 검증 → 레코드 교체 → 워커 라우트 정리)는 사람이 결정한다
+# 컷오버 시점에 활성화 — 현재 apex는 stella 워커(account/sobok/workers/stella)가 서빙 중이라
+# 전환 순서(터널 검증 → 레코드 교체 → stella apex 바인딩 제거)는 사람이 결정한다
 # resource "cloudflare_dns_record" "apex" {
 #   zone_id = data.cloudflare_zone.sobok_cc.id
 #   name    = "@"

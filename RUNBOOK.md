@@ -116,4 +116,4 @@ just flux-up
 
 `flux bootstrap`은 멱등이라 재실행해도 안전하다. 수렴 확인은 `flux get kustomizations -A` — 전부 Ready True면 끝. 이후는 전부 GitOps — `kubernetes/`에 커밋하면 Flux가 수렴시킨다.
 
-트래픽 컷오버는 별도 결정 사항이다: 현재 `sobok.cc` apex는 workers(`infra/cloudflare/account/sobok/workers/apex`)가 서빙 중이고, 터널 검증 후 apex CNAME을 `terraform output tunnel_cname` 값으로 교체할 때 selfhost-tunnel의 주석 처리된 `cloudflare_dns_record`를 활성화한다.
+트래픽 컷오버는 별도 결정 사항이다: 현재 `sobok.cc` apex는 `stella` 워커(`infra/cloudflare/account/sobok/workers/stella`)가 서빙 중이고(AdSense 심사용으로 실제 앱을 apex에 임시 바인딩), 터널 검증 후 apex CNAME을 `terraform output tunnel_cname` 값으로 교체할 때 selfhost-tunnel의 주석 처리된 `cloudflare_dns_record`를 활성화하고 stella의 apex 바인딩을 제거한다.
