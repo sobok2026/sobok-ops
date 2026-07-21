@@ -1,7 +1,3 @@
-provider "aiven" {
-  api_token = var.aiven_api_token
-}
-
 locals {
   # 토픽 이름은 sobok 에서 정의된 외부 계약이다: packages/events/src/topics.ts.
   # 이 문자열들을 그 파일과 동기화 유지한다(TOPIC_CHAT_MESSAGE / TOPIC_CHAT_PUSH_FANOUT).
@@ -37,7 +33,7 @@ locals {
 }
 
 module "kafka" {
-  source = "../../modules/kafka"
+  source = "../modules/kafka"
 
   project      = var.aiven_project
   service_name = var.kafka_service_name

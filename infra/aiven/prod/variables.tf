@@ -1,9 +1,3 @@
-variable "aiven_api_token" {
-  description = "프로젝트 접근 권한을 가진 Aiven API 토큰. HCP Terraform 워크스페이스 변수(sensitive)로 설정한다."
-  type        = string
-  sensitive   = true
-}
-
 variable "aiven_project" {
   description = "Kafka 서비스를 호스팅하는 Aiven 프로젝트(예: sobok2026)"
   type        = string
