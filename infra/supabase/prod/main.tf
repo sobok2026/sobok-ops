@@ -10,14 +10,6 @@
 #
 # NOTE: the project is on the FREE plan, which PAUSES after 7 days of inactivity — risky for a money DB
 # that may sit quiet then spike. Upgrade to Pro (no pausing) before real payments, or accept the pause risk.
-# Config-driven import (HCP UI/VCS 런): 기존 대시보드 프로젝트를 CREATE하지 말고 ADOPT한다.
-# 이 블록이 없으면 plan이 "1 to create"로 잡히고, apply 시 동일 이름의 두 번째 "sobok" 프로젝트
-# (새 ref·빈 DB)를 만들어 버린다. 첫 apply가 입양을 마치면 이 블록은 no-op이라 지워도 된다.
-import {
-  to = supabase_project.deeptype
-  id = "urplcigwqylhhywchgcf"
-}
-
 resource "supabase_project" "deeptype" {
   organization_id   = var.organization_id
   name              = var.project_name
