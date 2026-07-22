@@ -7,10 +7,8 @@ variable "domain" {
 }
 
 # ── 딥타입 DB 비밀번호 ──────────────────────────────────────────────────────────────────────────────
-# host/port/database/user는 supabase-prod 워크스페이스에서 terraform_remote_state로 읽는다(hyperdrive.tf).
-# 비밀번호만 write-only라 state로 흐를 수 없어 이 워크스페이스의 HCP 민감 변수로 직접 설정한다.
 variable "deeptype_pg_password" {
-  description = "Supabase 세션 풀러 비밀번호(대시보드 DB 비밀번호). Hyperdrive origin password."
+  description = "Supabase DB 비밀번호(대시보드 값, write-only). Hyperdrive origin password."
   type        = string
   sensitive   = true
 }
