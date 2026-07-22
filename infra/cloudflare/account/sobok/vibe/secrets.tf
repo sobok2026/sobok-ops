@@ -8,6 +8,7 @@ locals {
     "deeptype-portone-api-secret"     = var.deeptype_portone_api_secret
     "deeptype-portone-webhook-secret" = var.deeptype_portone_webhook_secret
     "deeptype-anthropic-api-key"      = var.deeptype_anthropic_api_key
+    "deeptype-resend-api-key"         = var.deeptype_resend_api_key
     # Shared "sobok" Turnstile widget secret (generated in the account-turnstile workspace). Set this HCP
     # var to that workspace's `turnstile_secret_key` output so the paid checkout reuses the same widget.
     "sobok-turnstile-secret" = var.sobok_turnstile_secret

@@ -37,6 +37,12 @@ variable "deeptype_anthropic_api_key" {
   sensitive   = true
 }
 
+variable "deeptype_resend_api_key" {
+  description = "딥타입 감정서 재열람 메일 발송용 Resend API 키."
+  type        = string
+  sensitive   = true
+}
+
 variable "sobok_turnstile_secret" {
   description = "공유 sobok Turnstile 위젯 secret(account-turnstile output turnstile_secret_key)."
   type        = string
