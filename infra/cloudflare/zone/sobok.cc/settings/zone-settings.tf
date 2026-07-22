@@ -31,6 +31,11 @@ resource "cloudflare_zone_setting" "baseline" {
   value      = each.value
 
   depends_on = [cloudflare_universal_ssl_setting.default]
+
+  # Provider Delete는 API를 변경하지 않고 Terraform state만 제거한다.
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # Cloudflare edge가 origin 종류와 관계없이 동일한 HSTS 정책을 보장한다. Cloudflare의 Zone HSTS
@@ -51,4 +56,9 @@ resource "cloudflare_zone_setting" "hsts" {
   }
 
   depends_on = [cloudflare_zone_setting.baseline]
+
+  # HSTS를 비활성화하지 않은 채 state에서만 제거하는 것을 막는다.
+  lifecycle {
+    prevent_destroy = true
+  }
 }
