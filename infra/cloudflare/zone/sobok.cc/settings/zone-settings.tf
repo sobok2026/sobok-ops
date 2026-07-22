@@ -1,9 +1,7 @@
 locals {
   # 모든 scalar cloudflare_zone_setting은 이 map이 단독 소유한다. Dashboard 메뉴나 값 자료형에 따라
-  # 다른 state로 나누지 않는다. Cloudflare API가 TLS 1.3의 0-RTT 상태(`zrt`)와 전용 `0rtt` setting을
-  # 모두 노출하므로 둘을 같은 방향으로 명시한다.
+  # 다른 state로 나누지 않는다.
   scalar_zone_settings = {
-    "0rtt"                   = "on"
     always_use_https         = "on"
     automatic_https_rewrites = "on"
     browser_check            = "on"
