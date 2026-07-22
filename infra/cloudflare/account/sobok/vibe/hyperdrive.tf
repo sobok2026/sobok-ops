@@ -20,7 +20,6 @@ data "terraform_remote_state" "supabase" {
 }
 
 locals {
-  # Model the origin ONCE so the FRESH and CACHED configs can never drift apart.
   deeptype_origin = {
     scheme   = "postgres"
     host     = data.terraform_remote_state.supabase.outputs.deeptype_pg_host
@@ -45,4 +44,8 @@ resource "cloudflare_hyperdrive_config" "deeptype_cached" {
   account_id = data.cloudflare_zone.sobok_cc.account.id
   name       = "deeptype-cached"
   origin     = local.deeptype_origin
+
+  caching = {
+    disabled = false
+  }
 }
