@@ -6,7 +6,7 @@ terraform {
 
     workspaces {
       project = "supabase"
-      name    = "supabase-prod"
+      name    = "sobok-prod"
     }
   }
 
