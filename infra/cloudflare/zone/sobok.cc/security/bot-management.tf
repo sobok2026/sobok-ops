@@ -5,6 +5,7 @@
 resource "cloudflare_bot_management" "default" {
   zone_id = data.cloudflare_zone.sobok_cc.id
 
+  enable_js             = true
   fight_mode            = true
   is_robots_txt_managed = false
 
