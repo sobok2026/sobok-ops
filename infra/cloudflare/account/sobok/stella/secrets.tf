@@ -9,7 +9,7 @@ data "terraform_remote_state" "secrets_store" {
   backend = "remote"
 
   config = {
-    organization = "sobok"
+    organization = "sobok2026"
     workspaces = {
       name = "account-secrets-store"
     }
