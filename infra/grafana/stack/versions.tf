@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.14.0, < 2.0.0"
 
   cloud {
-    organization = "sobok"
+    organization = "sobok2026"
 
     workspaces {
       project = "grafana"

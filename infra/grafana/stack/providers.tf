@@ -4,7 +4,7 @@ data "terraform_remote_state" "grafana_cloud" {
   backend = "remote"
 
   config = {
-    organization = "sobok"
+    organization = "sobok2026"
     workspaces = {
       name = "grafana-cloud"
     }
