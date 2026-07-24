@@ -1,6 +1,6 @@
 # Grafana Cloud 인프라
 
-Grafana Cloud 는 HCP Terraform 의 `sobok` 조직에서 관리한다. 이 레포가 source of truth 다; UI 변경은
+Grafana Cloud 는 HCP Terraform 의 `sobok2026` 조직에서 관리한다. 이 레포가 source of truth 다; UI 변경은
 break-glass 용도에 한하며 Terraform 으로 다시 수렴시켜야 한다.
 
 Terraform 이 Grafana Cloud **설정**을 소유한다: 스택, access policy 와 토큰, 스택 서비스 계정,
