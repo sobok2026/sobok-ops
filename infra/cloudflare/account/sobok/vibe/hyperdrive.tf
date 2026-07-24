@@ -2,10 +2,11 @@
 # FRESH disables caching — money/entitlement/webhook/report-CAS reads must NEVER be stale.
 # CACHED keeps default caching — used only for the immutable done-report body read.
 #
-# The origin (host/port/database/user) is read from the Supabase DB workspace via terraform_remote_state so
-# it stays LINKED to its source (no manual copy, no drift), using THIS workspace's own run credentials — no
-# long-lived TFE_TOKEN. The DB password is write-only and NOT in that workspace's state, so it is supplied
-# directly as a sensitive HCP variable here.
+# The origin (host/port/database/user/password) is read from the Supabase DB workspace via
+# terraform_remote_state so it stays LINKED to its source (no manual copy, no drift), using THIS workspace's
+# own run credentials — no long-lived TFE_TOKEN. The runtime role is the least-privilege `deeptype_app`
+# (NOT the `postgres` owner); its password is Terraform-generated in sobok-prod and read from that workspace's
+# sensitive output, so there is no hand-set DB password variable here.
 #
 # The two config ids are exported (outputs.tf) → paste them into apps/vibe/wrangler.jsonc hyperdrive bindings.
 data "terraform_remote_state" "supabase" {
@@ -26,7 +27,7 @@ locals {
     port     = data.terraform_remote_state.supabase.outputs.deeptype_pg_port
     database = data.terraform_remote_state.supabase.outputs.deeptype_pg_database
     user     = data.terraform_remote_state.supabase.outputs.deeptype_pg_user
-    password = var.deeptype_pg_password
+    password = data.terraform_remote_state.supabase.outputs.deeptype_pg_password
   }
 }
 

@@ -12,10 +12,7 @@ terraform {
 
   required_providers {
     supabase = {
-      source = "supabase/supabase"
-      # >= 1.9.1 is REQUIRED, not just preferred: PR #306 (first released in 1.9.1) stops the provider's
-      # post-apply REST health check from failing when settings.tf intentionally disables the Data API
-      # (db_schema=""). On 1.9.0 that apply errors with "unhealthy service rest" (issue #304).
+      source  = "supabase/supabase"
       version = ">= 1.9.1, < 2.0.0"
     }
     postgresql = {

@@ -1,3 +1,4 @@
 # 프로젝트 레벨 CLOUDFLARE_API_TOKEN 변수 세트로 인증한다.
-# 이 워크스페이스는 토큰에 Turnstile Read/Write 스코프가 추가로 필요하다.
+# 이 워크스페이스는 토큰에 Turnstile Read/Write와 Secrets Store Read/Write 스코프가 추가로 필요하다
+# (위젯 생성 + 공유 secret의 스토어 기록, secrets.tf 참고).
 provider "cloudflare" {}

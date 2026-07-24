@@ -6,19 +6,6 @@ variable "domain" {
   nullable    = false
 }
 
-# ── 딥타입 DB 비밀번호 ──────────────────────────────────────────────────────────────────────────────
-variable "deeptype_pg_password" {
-  description = "Supabase DB 비밀번호(대시보드 값, write-only). Hyperdrive origin password."
-  type        = string
-  sensitive   = true
-}
-
-# ── Cloudflare Secrets Store ────────────────────────────────────────────────────────────────────────
-variable "secrets_store_id" {
-  description = "계정 Secrets Store id(계정당 1개). `wrangler secrets-store store list` 또는 대시보드에서 확인."
-  type        = string
-}
-
 variable "deeptype_portone_api_secret" {
   description = "딥타입 전용 PortOne 스토어 API secret."
   type        = string
@@ -39,12 +26,6 @@ variable "deeptype_anthropic_api_key" {
 
 variable "deeptype_resend_api_key" {
   description = "딥타입 감정서 재열람 메일 발송용 Resend API 키."
-  type        = string
-  sensitive   = true
-}
-
-variable "sobok_turnstile_secret" {
-  description = "공유 sobok Turnstile 위젯 secret(account-turnstile output turnstile_secret_key)."
   type        = string
   sensitive   = true
 }
