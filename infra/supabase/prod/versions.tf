@@ -15,5 +15,13 @@ terraform {
       source  = "supabase/supabase"
       version = ">= 1.9.0, < 2.0.0"
     }
+    postgresql = {
+      source  = "cyrilgdn/postgresql"
+      version = ">= 1.22.0, < 2.0.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.6.0, < 4.0.0"
+    }
   }
 }

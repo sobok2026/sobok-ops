@@ -1,10 +1,3 @@
-# Consumed by the account-vibe workspace via the tfe_outputs data source (remote state sharing must be
-# enabled FROM this workspace TO account-vibe). These feed the two Cloudflare Hyperdrive origins and stay
-# LINKED — no manual copy. The DB PASSWORD is intentionally NOT output: it is write-only and never in this
-# state under the import path, so it is set directly as a sensitive HCP variable on account-vibe.
-#
-# Hyperdrive MUST target the SESSION pooler (port 5432, user postgres.<ref>), never the 6543 transaction
-# pooler (double-pooling + prepared-statement conflicts; Hyperdrive is itself the pooling layer).
 output "deeptype_pg_host" {
   description = "세션 풀러 호스트(Hyperdrive origin host)."
   value       = var.pooler_host
@@ -21,7 +14,27 @@ output "deeptype_pg_database" {
 }
 
 output "deeptype_pg_user" {
-  description = "세션 풀러 사용자(postgres.<project-ref> 테넌트 라우팅 형식)."
-  value       = "postgres.${supabase_project.deeptype.id}"
+  description = "deeptype 런타임 역할 세션 풀러 사용자(deeptype_app.<project-ref>)."
+  value       = "deeptype_app.${supabase_project.deeptype.id}"
+  sensitive   = true
+}
+
+output "deeptype_pg_password" {
+  description = "deeptype_app 역할 비밀번호(TF 생성). account-vibe가 Hyperdrive origin password로 읽는다."
+  value       = random_password.deeptype_app.result
+  sensitive   = true
+}
+
+# account-stella 워크스페이스가 terraform_remote_state로 읽어 Hyperdrive origin user/password로 쓴다
+# (Remote State Sharing: sobok-prod → account-stella 필요).
+output "stella_pg_user" {
+  description = "stella 런타임 역할 세션 풀러 사용자(stella_app.<project-ref>)."
+  value       = "stella_app.${supabase_project.deeptype.id}"
+  sensitive   = true
+}
+
+output "stella_pg_password" {
+  description = "stella_app 역할 비밀번호(TF 생성). account-stella가 Hyperdrive origin password로 읽는다."
+  value       = random_password.stella_app.result
   sensitive   = true
 }
