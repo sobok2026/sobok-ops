@@ -6,8 +6,7 @@ locals {
     always_use_https         = "on"
     automatic_https_rewrites = "on"
     browser_check            = "on"
-    # Cloudflare's default and recommended 15-45 minute range midpoint.
-    challenge_ttl            = 1800
+    challenge_ttl            = 2700
     early_hints              = "on"
     ech                      = "on"
     email_obfuscation        = "on"
