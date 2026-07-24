@@ -1,6 +1,7 @@
 locals {
   # 모든 scalar cloudflare_zone_setting은 이 map이 단독 소유한다. Dashboard 메뉴나 값 자료형에 따라
-  # 다른 state로 나누지 않는다.
+  # 다른 state로 나누지 않는다. 값 사이 인라인 주석은 map 정렬을 깨므로(terraform fmt) 여기에 모은다.
+  # - tls_1_3 = "zrt": TLS 1.3 + 0-RTT. "resumed connections"도 겸하므로 별도 0rtt 토글을 두지 않는다.
   scalar_zone_settings = {
     always_use_https         = "on"
     automatic_https_rewrites = "on"
@@ -15,6 +16,7 @@ locals {
     opportunistic_encryption = "on"
     opportunistic_onion      = "on"
     replace_insecure_js      = "on"
+    speed_brain              = "on"
     ssl                      = "strict"
     tls_1_3                  = "zrt"
     websockets               = "on"
