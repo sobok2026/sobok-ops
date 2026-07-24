@@ -11,6 +11,7 @@ locals {
     early_hints              = "on"
     ech                      = "on"
     email_obfuscation        = "on"
+    fonts                    = "on"
     http3                    = "on"
     min_tls_version          = "1.2"
     opportunistic_encryption = "on"
